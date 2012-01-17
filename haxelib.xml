@@ -1,0 +1,7 @@
+<project name="layout" url="http://www.joshuagranick.com" license="BSD">
+    <user name="elyon"/>
+    <tag v="cpp"/>
+    <tag v="flash"/>
+    <description>Flexible system for fluid resizing layouts</description>
+    <version name="1.01">Added documentation</version>
+</project>
