@@ -85,9 +85,9 @@ class LayoutItem {
 	
 	
 	
-	private #if !neko inline #end function get_objectHeight ():Float {
+	private #if (!neko && !js) inline #end function get_objectHeight ():Float {
 		
-		#if neko
+		#if (neko || js)
 		
 		if (Reflect.hasField (object, "height")) {
 			
@@ -108,9 +108,9 @@ class LayoutItem {
 	}
 	
 	
-	private #if !neko inline #end function set_objectHeight (value:Float):Float {
+	private #if (!neko && !js) inline #end function set_objectHeight (value:Float):Float {
 		
-		#if neko
+		#if (neko || js)
 		
 		if (Reflect.hasField (object, "height")) {
 			
@@ -133,9 +133,9 @@ class LayoutItem {
 	}
 	
 	
-	private #if !neko inline #end function get_objectWidth ():Float {
+	private #if (!neko && !js) inline #end function get_objectWidth ():Float {
 		
-		#if neko
+		#if (neko || js)
 		
 		if (Reflect.hasField (object, "width")) {
 			
@@ -156,9 +156,9 @@ class LayoutItem {
 	}
 	
 	
-	private #if !neko inline #end function set_objectWidth (value:Float):Float {
+	private #if (!neko && !js) inline #end function set_objectWidth (value:Float):Float {
 		
-		#if neko
+		#if (neko || js)
 		
 		if (Reflect.hasField (object, "width")) {
 			
@@ -181,9 +181,9 @@ class LayoutItem {
 	}
 	
 	
-	private #if !neko inline #end function get_objectX ():Float {
+	private #if (!neko && !js) inline #end function get_objectX ():Float {
 		
-		#if neko
+		#if (neko || js)
 		
 		if (Reflect.hasField (object, "x")) {
 			
@@ -204,9 +204,9 @@ class LayoutItem {
 	}
 	
 	
-	private #if !neko inline #end function set_objectX (value:Float):Float {
+	private #if (!neko && !js) inline #end function set_objectX (value:Float):Float {
 		
-		#if neko
+		#if (neko || js)
 		
 		if (Reflect.hasField (object, "x")) {
 			
@@ -229,9 +229,9 @@ class LayoutItem {
 	}
 	
 	
-	private #if !neko inline #end function get_objectY ():Float {
+	private #if (!neko && !js) inline #end function get_objectY ():Float {
 		
-		#if neko
+		#if (neko || js)
 		
 		if (Reflect.hasField (object, "y")) {
 			
@@ -252,9 +252,9 @@ class LayoutItem {
 	}
 	
 	
-	private #if !neko inline #end function set_objectY (value:Float):Float {
+	private #if (!neko && !js) inline #end function set_objectY (value:Float):Float {
 		
-		#if neko
+		#if (neko || js)
 		
 		if (Reflect.hasField (object, "y")) {
 			
