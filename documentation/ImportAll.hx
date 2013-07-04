@@ -1,6 +1,6 @@
 package;
 
-import com.eclecticdesignstudio.layout.LayoutGroup;
-import com.eclecticdesignstudio.layout.LayoutItem;
-import com.eclecticdesignstudio.layout.LayoutManager;
-import com.eclecticdesignstudio.layout.LayoutType;
+import layout.LayoutGroup;
+import layout.LayoutItem;
+import layout.LayoutManager;
+import layout.LayoutType;

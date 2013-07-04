@@ -1,4 +1,4 @@
-﻿package com.eclecticdesignstudio.layout;
+﻿package layout;
 
 
 import flash.display.DisplayObject;
@@ -9,17 +9,18 @@ import flash.events.EventDispatcher;
 /**
  * @author Joshua Granick
  */
+@:access(layout.LayoutItem)
 class LayoutManager extends EventDispatcher {
 	
 	
-	public var clampHeight (getClampHeight, setClampHeight):Bool;
-	public var clampWidth (getClampWidth, setClampWidth):Bool;
-	public var height (getHeight, null):Float;
-	public var initHeight (getInitHeight, null):Float;
-	public var initWidth (getInitWidth, null):Float;
-	public var minHeight (getMinHeight, setMinHeight):Float;
-	public var minWidth (getMinWidth, setMinWidth):Float;
-	public var width (getWidth, null):Float;
+	public var clampHeight (get, set):Bool;
+	public var clampWidth (get, set):Bool;
+	public var height (get, null):Float;
+	public var initHeight (get, null):Float;
+	public var initWidth (get, null):Float;
+	public var minHeight (get, set):Float;
+	public var minWidth (get, set):Float;
+	public var width (get, null):Float;
 	
 	private var items:LayoutGroup;
 	
@@ -77,21 +78,21 @@ class LayoutManager extends EventDispatcher {
 			
 			case LayoutType.CENTER:
 				
-				item.object.x = layoutGroup.width / 2 - item.object.width / 2 + item.marginLeft - item.marginRight;
+				item.objectX = layoutGroup.width / 2 - item.objectWidth / 2 + item.marginLeft - item.marginRight;
 			
 			case LayoutType.LEFT:
 				
-				item.object.x = item.marginLeft;
+				item.objectX = item.marginLeft;
 			
 			case LayoutType.RIGHT:
 				
-				item.object.x = layoutGroup.width - item.object.width - item.marginRight;
+				item.objectX = layoutGroup.width - item.objectWidth - item.marginRight;
 			
 			case LayoutType.STRETCH:
 				
-				item.object.x = item.marginLeft;
+				item.objectX = item.marginLeft;
 				
-				var stretchWidth:Float = layoutGroup.width - item.marginLeft - item.marginRight;
+				var stretchWidth = layoutGroup.width - item.marginLeft - item.marginRight;
 				
 				if (stretchWidth < 0) {
 					
@@ -99,13 +100,13 @@ class LayoutManager extends EventDispatcher {
 					
 				}
 				
-				if (item.rigidHorizontal && !Math.isNaN (item.minWidth) && stretchWidth < item.minWidth) {
+				if (item.rigidHorizontal && item.minWidth != null && stretchWidth < item.minWidth) {
 					
-					item.object.width = item.minWidth;
+					item.objectWidth = item.minWidth;
 					
 				} else {
 					
-					item.object.width = stretchWidth;
+					item.objectWidth = stretchWidth;
 					
 				}
 			
@@ -117,15 +118,15 @@ class LayoutManager extends EventDispatcher {
 			
 			case LayoutType.BOTTOM:
 				
-				item.object.y = layoutGroup.height - item.object.height - item.marginBottom;
+				item.objectY = layoutGroup.height - item.objectHeight - item.marginBottom;
 			
 			case LayoutType.CENTER:
 				
-				item.object.y = layoutGroup.height / 2 - item.object.height / 2 + item.marginTop - item.marginBottom;
+				item.objectY = layoutGroup.height / 2 - item.objectHeight / 2 + item.marginTop - item.marginBottom;
 			
 			case LayoutType.STRETCH:
 				
-				item.object.y = item.marginTop;
+				item.objectY = item.marginTop;
 				
 				var stretchHeight:Float = layoutGroup.height - item.marginTop - item.marginBottom;
 				
@@ -135,26 +136,26 @@ class LayoutManager extends EventDispatcher {
 					
 				}
 				
-				if (item.rigidVertical && !Math.isNaN (item.minHeight) && stretchHeight < item.minHeight) {
+				if (item.rigidVertical && item.minHeight != null && stretchHeight < item.minHeight) {
 					
-					item.object.height = item.minHeight;
+					item.objectHeight = item.minHeight;
 					
 				} else {
 					
-					item.object.height = stretchHeight;
+					item.objectHeight = stretchHeight;
 					
 				}
 			
 			case LayoutType.TOP:
 				
-				item.object.y = item.marginTop;
+				item.objectY = item.marginTop;
 			
 			default:
 			
 		}
 		
-		item.object.x += layoutGroup.x;
-		item.object.y += layoutGroup.y;
+		item.objectX += layoutGroup.x;
+		item.objectY += layoutGroup.y;
 		
 	}
 	
@@ -164,8 +165,8 @@ class LayoutManager extends EventDispatcher {
 	 */
 	public static function layoutItemGroup (layoutGroup:LayoutGroup):Void {
 		
-		var minWidth:Float = ifDefined (layoutGroup.minWidth, 0);
-		var minHeight:Float = ifDefined (layoutGroup.minHeight, 0);
+		var minWidth = ifDefined (layoutGroup.minWidth, 0);
+		var minHeight = ifDefined (layoutGroup.minHeight, 0);
 		
 		for (item in layoutGroup.items) {
 			
@@ -175,13 +176,13 @@ class LayoutManager extends EventDispatcher {
 				
 				var minObjectWidth = item.marginLeft + item.marginRight;
 				
-				if (!Math.isNaN (item.minWidth)) {
+				if (item.minWidth != null) {
 					
 					minObjectWidth += item.minWidth;
 					
 				} else {
 					
-					minObjectWidth += item.object.width;
+					minObjectWidth += item.objectWidth;
 					
 				}
 				
@@ -197,13 +198,13 @@ class LayoutManager extends EventDispatcher {
 				
 				var minObjectHeight = item.marginTop + item.marginBottom;
 				
-				if (!Math.isNaN (item.minHeight)) {
+				if (item.minHeight != null) {
 					
 					minObjectHeight += item.minHeight;
 					
 				} else {
 					
-					minObjectHeight += item.object.height;
+					minObjectHeight += item.objectHeight;
 					
 				}
 				
@@ -291,84 +292,84 @@ class LayoutManager extends EventDispatcher {
 	
 	
 	
-	private function getClampHeight ():Bool {
+	private function get_clampHeight ():Bool {
 		
 		return items.clampHeight;
 		
 	}
 	
 	
-	private function setClampHeight (value:Bool):Bool {
+	private function set_clampHeight (value:Bool):Bool {
 		
 		return items.clampHeight = value;
 		
 	}
 	
 	
-	private function getClampWidth ():Bool {
+	private function get_clampWidth ():Bool {
 		
 		return items.clampWidth;
 		
 	}
 	
 	
-	private function setClampWidth (value:Bool):Bool {
+	private function set_clampWidth (value:Bool):Bool {
 		
 		return items.clampWidth = value;
 		
 	}
 	
 	
-	private function getHeight ():Float {
+	private function get_height ():Float {
 		
 		return items.height;
 		
 	}
 	
 	
-	private function getInitHeight ():Float {
+	private function get_initHeight ():Float {
 		
 		return items.initHeight;
 		
 	}
 	
 	
-	private function getInitWidth ():Float {
+	private function get_initWidth ():Float {
 		
 		return items.initWidth;
 		
 	}
 	
 	
-	private function getMinHeight ():Float {
+	private function get_minHeight ():Float {
 		
 		return items.minHeight;
 		
 	}
 	
 	
-	private function setMinHeight (value:Float):Float {
+	private function set_minHeight (value:Float):Float {
 		
 		return items.minHeight = value;
 		
 	}
 	
 	
-	private function getMinWidth ():Float {
+	private function get_minWidth ():Float {
 		
 		return items.minWidth;
 		
 	}
 	
 	
-	private function setMinWidth (value:Float):Float {
+	private function set_minWidth (value:Float):Float {
 		
 		return items.minWidth = value;
 		
 	}
 	
 	
-	private function getWidth ():Float {
+	private function get_width ():Float {
 		
 		return items.width;
 		

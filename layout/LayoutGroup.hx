@@ -1,4 +1,4 @@
-﻿package com.eclecticdesignstudio.layout;
+﻿package layout;
 
 
 import flash.geom.Point;
@@ -12,13 +12,13 @@ class LayoutGroup extends LayoutItem {
 	
 	public var clampHeight:Bool;
 	public var clampWidth:Bool;
-	public var height (getHeight, setHeight):Float;
-	public var initHeight (getInitHeight, null):Float;
-	public var initWidth (getInitWidth, null):Float;
+	public var height (get, set):Float;
+	public var initHeight (get, null):Float;
+	public var initWidth (get, null):Float;
 	public var items:Array <LayoutItem>;
-	public var width (getWidth, setWidth):Float;
-	public var x (getX, setX):Float;
-	public var y (getY, setY):Float;
+	public var width (get, set):Float;
+	public var x (get, set):Float;
+	public var y (get, set):Float;
 	
 	private var itemConfigureHorizontal:Array <Bool>;
 	private var itemConfigureVertical:Array <Bool>;
@@ -80,7 +80,7 @@ class LayoutGroup extends LayoutItem {
 				
 				case LayoutType.CENTER:
 					
-					var horizontalOffset:Float = item.object.x - (_initWidth / 2 - item.object.width / 2) - _x;
+					var horizontalOffset = item.objectX - (_initWidth / 2 - item.objectWidth / 2) - _x;
 					
 					if (horizontalOffset > 0) {
 						
@@ -94,20 +94,20 @@ class LayoutGroup extends LayoutItem {
 				
 				case LayoutType.LEFT:
 					
-					item.marginLeft = item.object.x - _x;
+					item.marginLeft = item.objectX - _x;
 				
 				case LayoutType.RIGHT:
 					
-					item.marginRight = _initWidth - item.object.x - item.object.width - _x;
+					item.marginRight = _initWidth - item.objectX - item.objectWidth - _x;
 				
 				case LayoutType.STRETCH:
 					
-					item.marginLeft = item.object.x - _x;
-					item.marginRight = _initWidth - item.object.x - item.object.width - _x;
+					item.marginLeft = item.objectX - _x;
+					item.marginRight = _initWidth - item.objectX - item.objectWidth - _x;
 					
-					if (item.rigidHorizontal && Math.isNaN (item.minWidth)) {
+					if (item.rigidHorizontal && item.minWidth == null) {
 						
-						item.minWidth = item.object.width;
+						item.minWidth = item.objectWidth;
 						
 					}
 				
@@ -123,11 +123,11 @@ class LayoutGroup extends LayoutItem {
 				
 				case LayoutType.BOTTOM:
 					
-					item.marginBottom = _initHeight - item.object.y - item.object.height - _y;
+					item.marginBottom = _initHeight - item.objectY - item.objectHeight - _y;
 				
 				case LayoutType.CENTER:
 					
-					var verticalOffset:Float = item.object.y - (_initHeight / 2 - item.object.height / 2) - _y;
+					var verticalOffset = item.objectY - (_initHeight / 2 - item.objectHeight / 2) - _y;
 					
 					if (verticalOffset > 0) {
 						
@@ -141,18 +141,18 @@ class LayoutGroup extends LayoutItem {
 				
 				case LayoutType.STRETCH:
 					
-					item.marginTop = item.object.y - _y;
-					item.marginBottom = _initHeight - item.object.y - item.object.height - _y;
+					item.marginTop = item.objectY - _y;
+					item.marginBottom = _initHeight - item.objectY - item.objectHeight - _y;
 					
-					if (item.rigidVertical && Math.isNaN (item.minHeight)) {
+					if (item.rigidVertical && item.minHeight == null) {
 						
-						item.minHeight = item.object.height;
+						item.minHeight = item.objectHeight;
 						
 					}
 				
 				case LayoutType.TOP:
 					
-					item.marginTop = item.object.y - _y;
+					item.marginTop = item.objectY - _y;
 				
 				default:
 				
@@ -185,15 +185,15 @@ class LayoutGroup extends LayoutItem {
 				
 				if (item.horizontalLayout != LayoutType.NONE) {
 					
-					if (item.object.x < beginning.x) {
+					if (item.objectX < beginning.x) {
 						
-						beginning.x = item.object.x;
+						beginning.x = item.objectX;
 						
 					}
 					
-					if (item.object.x + item.object.width > end.x) {
+					if (item.objectX + item.objectWidth > end.x) {
 						
-						end.x = item.object.x + item.object.width;
+						end.x = item.objectX + item.objectWidth;
 						
 					}
 					
@@ -201,15 +201,15 @@ class LayoutGroup extends LayoutItem {
 				
 				if (item.verticalLayout != LayoutType.NONE) {
 					
-					if (item.object.y < beginning.y) {
+					if (item.objectY < beginning.y) {
 						
-						beginning.y = item.object.y;
+						beginning.y = item.objectY;
 						
 					}
 					
-					if (item.object.y + item.object.height > end.y) {
+					if (item.objectY + item.objectHeight > end.y) {
 						
-						end.y = item.object.y + item.object.height;
+						end.y = item.objectY + item.objectHeight;
 						
 					}
 					
@@ -267,14 +267,14 @@ class LayoutGroup extends LayoutItem {
 	
 	
 	
-	private function getHeight ():Float {
+	private function get_height ():Float {
 		
 		return _height;
 		
 	}
 	
 	
-	private function setHeight (value:Float):Float {
+	private function set_height (value:Float):Float {
 		
 		resize (_width, value);
 		
@@ -283,28 +283,28 @@ class LayoutGroup extends LayoutItem {
 	}
 	
 	
-	private function getInitHeight ():Float {
+	private function get_initHeight ():Float {
 		
 		return _initHeight;
 		
 	}
 	
 	
-	private function getInitWidth ():Float {
+	private function get_initWidth ():Float {
 		
 		return _initWidth;
 		
 	}
 	
 	
-	private function getWidth ():Float {
+	private function get_width ():Float {
 		
 		return _width;
 		
 	}
 	
 	
-	private function setWidth (value:Float):Float {
+	private function set_width (value:Float):Float {
 		
 		resize (value, _height);
 		
@@ -313,14 +313,14 @@ class LayoutGroup extends LayoutItem {
 	}
 	
 	
-	private function getX ():Float {
+	private function get_x ():Float {
 		
 		return _x;
 		
 	}
 	
 	
-	private function setX (value:Float):Float {
+	private function set_x (value:Float):Float {
 		
 		_x = value;
 		
@@ -331,14 +331,14 @@ class LayoutGroup extends LayoutItem {
 	}
 	
 	
-	private function getY ():Float {
+	private function get_y ():Float {
 		
 		return _y;
 		
 	}
 	
 	
-	private function setY (value:Float):Float {
+	private function set_y (value:Float):Float {
 		
 		_y = value;
 		

@@ -1,0 +1,11 @@
+{
+  "name": "layout",
+  "url": "http://github.com/jgranick/layout",
+  "license": "MIT",
+  "tags": ["cpp", "flash"],
+  "description": "Flexible system for fluid resizing layouts",
+  "version": "1.0.3",
+  "releasenote": "Update for Haxe 3",
+  "contributors": [ "singmajesty" ],
+  "dependencies": {}
+}
