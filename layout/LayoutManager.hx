@@ -5,282 +5,148 @@ import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 
+@:access(layout.LayoutItem)
+
 
 /**
  * @author Joshua Granick
  */
-@:access(layout.LayoutItem)
-class LayoutManager extends EventDispatcher {
+class LayoutManager {
 	
 	
-	public var clampHeight (get, set):Bool;
-	public var clampWidth (get, set):Bool;
-	public var height (get, null):Float;
-	public var initHeight (get, null):Float;
-	public var initWidth (get, null):Float;
-	public var minHeight (get, set):Float;
-	public var minWidth (get, set):Float;
-	public var width (get, null):Float;
+	public static var clampHeight (get, set):Bool;
+	public static var clampWidth (get, set):Bool;
+	public static var height (get, null):Float;
+	public static var initHeight (get, null):Float;
+	public static var initScale (get, null):Float;
+	public static var initWidth (get, null):Float;
+	public static var minHeight (get, set):Float;
+	public static var minWidth (get, set):Float;
+	public static var pixelScale (get, set):Float;
+	public static var width (get, null):Float;
 	
-	private var items:LayoutGroup;
+	private static var eventDispatcher:EventDispatcher;
+	private static var initialized = false;
+	private static var items:LayoutGroup;
 	
 	private var _initHeight:Float;
 	private var _initWidth:Float;
 	
 	
-	public function new (initWidth:Float = 0, initHeight:Float = 0) {
-		
-		super ();
-		
-		_initWidth = initWidth;
-		_initHeight = initHeight;
+	public static function addEventListener (type:String, listener:Dynamic, useCapture:Bool = false, priority:Int = 0, useWeakReference:Bool = false):Void {
 		
 		initialize ();
+		
+		eventDispatcher.addEventListener (type, listener, useCapture, priority, useWeakReference);
 		
 	}
 	
 	
-	public function addItem (item:LayoutItem, autoConfigureHorizontal:Bool = true, autoConfigureVertical:Bool = true):Void {
+	public static function addItem (item:LayoutItem, autoConfigureHorizontal:Bool = true, autoConfigureVertical:Bool = true):Void {
+		
+		initialize ();
 		
 		items.addItem (item, autoConfigureHorizontal, autoConfigureVertical, false);
 		
 	}
 	
 	
-	private static function ifDefined (value:Dynamic, defaultValue:Dynamic):Dynamic {
+	public static function dispatchEvent (event:Event):Bool {
 		
-		if (value != null) {
-			
-			if (!Std.is (value, String) || (Std.is (value, String) && value != "")) {
-				
-				return value;
-				
-			}
-			
-		}
+		initialize ();
 		
-		return defaultValue;
+		return eventDispatcher.dispatchEvent (event);
 		
 	}
 	
 	
-	private function initialize ():Void {
+	public static function hasEventListener (type:String):Bool {
 		
-		items = new LayoutGroup (LayoutType.NONE, LayoutType.NONE, false);
-		items.resize (_initWidth, _initHeight);
+		initialize ();
 		
-	}
-	
-	
-	private static function layoutItem (item:LayoutItem, layoutGroup:LayoutGroup):Void {
-		
-		switch (item.horizontalLayout) {
-			
-			case LayoutType.CENTER:
-				
-				item.objectX = layoutGroup.width / 2 - item.objectWidth / 2 + item.marginLeft - item.marginRight;
-			
-			case LayoutType.LEFT:
-				
-				item.objectX = item.marginLeft;
-			
-			case LayoutType.RIGHT:
-				
-				item.objectX = layoutGroup.width - item.objectWidth - item.marginRight;
-			
-			case LayoutType.STRETCH:
-				
-				item.objectX = item.marginLeft;
-				
-				var stretchWidth = layoutGroup.width - item.marginLeft - item.marginRight;
-				
-				if (stretchWidth < 0) {
-					
-					stretchWidth = 0;
-					
-				}
-				
-				if (item.rigidHorizontal && item.minWidth != null && stretchWidth < item.minWidth) {
-					
-					item.objectWidth = item.minWidth;
-					
-				} else {
-					
-					item.objectWidth = stretchWidth;
-					
-				}
-			
-			default:
-			
-		}
-		
-		switch (item.verticalLayout) {
-			
-			case LayoutType.BOTTOM:
-				
-				item.objectY = layoutGroup.height - item.objectHeight - item.marginBottom;
-			
-			case LayoutType.CENTER:
-				
-				item.objectY = layoutGroup.height / 2 - item.objectHeight / 2 + item.marginTop - item.marginBottom;
-			
-			case LayoutType.STRETCH:
-				
-				item.objectY = item.marginTop;
-				
-				var stretchHeight:Float = layoutGroup.height - item.marginTop - item.marginBottom;
-				
-				if (stretchHeight < 0) {
-					
-					stretchHeight = 0;
-					
-				}
-				
-				if (item.rigidVertical && item.minHeight != null && stretchHeight < item.minHeight) {
-					
-					item.objectHeight = item.minHeight;
-					
-				} else {
-					
-					item.objectHeight = stretchHeight;
-					
-				}
-			
-			case LayoutType.TOP:
-				
-				item.objectY = item.marginTop;
-			
-			default:
-			
-		}
-		
-		item.objectX += layoutGroup.x;
-		item.objectY += layoutGroup.y;
+		return eventDispatcher.hasEventListener (type);
 		
 	}
 	
 	
-	/**
-	 * @private
-	 */
-	public static function layoutItemGroup (layoutGroup:LayoutGroup):Void {
+	private static function initialize ():Void {
 		
-		var minWidth = ifDefined (layoutGroup.minWidth, 0);
-		var minHeight = ifDefined (layoutGroup.minHeight, 0);
-		
-		for (item in layoutGroup.items) {
+		if (!initialized) {
 			
-			layoutItem (item, layoutGroup);
+			initialized = true;
 			
-			if (item.rigidHorizontal) {
-				
-				var minObjectWidth = item.marginLeft + item.marginRight;
-				
-				if (item.minWidth != null) {
-					
-					minObjectWidth += item.minWidth;
-					
-				} else {
-					
-					minObjectWidth += item.objectWidth;
-					
-				}
-				
-				if (minWidth < minObjectWidth) {
-					
-					minWidth = minObjectWidth;
-					
-				}
-				
-			}
+			eventDispatcher = new EventDispatcher ();
 			
-			if (item.rigidVertical) {
-				
-				var minObjectHeight = item.marginTop + item.marginBottom;
-				
-				if (item.minHeight != null) {
-					
-					minObjectHeight += item.minHeight;
-					
-				} else {
-					
-					minObjectHeight += item.objectHeight;
-					
-				}
-				
-				if (minHeight < minObjectHeight) {
-					
-					minHeight = minObjectHeight;
-					
-				}
-				
-			}
-			
-		}
-		
-		var newWidth = layoutGroup.width;
-		var newHeight = layoutGroup.height;
-		
-		if (newWidth < minWidth) {
-			
-			newWidth = minWidth;
-			
-		}
-		
-		if (newHeight < minHeight) {
-			
-			newHeight = minHeight;
-			
-		}
-		
-		if (layoutGroup.clampWidth && newWidth > layoutGroup.initWidth) {
-			
-			newWidth = layoutGroup.initWidth;
-			
-		}
-		
-		if (layoutGroup.clampHeight && newHeight > layoutGroup.initHeight) {
-			
-			newHeight = layoutGroup.initHeight;
-			
-		}
-		
-		if (newWidth != layoutGroup.width || newHeight != layoutGroup.height) {
-			
-			layoutGroup.resize (newWidth, newHeight);
+			items = new LayoutGroup (0, 0, 1, NONE, NONE, false, false);
+			items.addEventListener (Event.RESIZE, items_onResize);
 			
 		}
 		
 	}
 	
 	
-	public function layoutItems ():Void {
+	public static function layoutItems ():Void {
 		
-		layoutItemGroup (items);
+		initialize ();
+		
+		items.layoutItems ();
 		
 	}
 	
 	
-	public function resize (width:Float, height:Float):Void {
+	public static function removeEventListener (type:String, listener:Dynamic, capture:Bool = false):Void {
 		
-		var cacheWidth = items.width;
-		var cacheHeight = items.height;
+		initialize ();
+		
+		eventDispatcher.removeEventListener (type, listener, capture);
+		
+	}
+	
+	
+	public static function resize (width:Float, height:Float):Void {
+		
+		initialize ();
 		
 		items.resize (width, height);
 		
-		if (items.width != cacheWidth || items.height != cacheHeight) {
-			
-			dispatchEvent (new Event (Event.RESIZE));
-			
-		}
+	}
+	
+	
+	public static function scale (scale:Float):Void {
+		
+		items.scale (scale);
 		
 	}
 	
 	
-	public function setMinSize (minWidth:Float = 0, minHeight:Float = 0):Void {
+	public static function setInitSize (width:Float, height:Float):Void {
 		
-		items.minWidth = minWidth;
-		items.minHeight = minHeight;
+		initialize ();
+		
+		items.setInitSize (width, height);
+		
+	}
+	
+	
+	public static function setMinSize (minWidth:Float = 0, minHeight:Float = 0):Void {
+		
+		initialize ();
+		
+		items.setMinSize (minWidth, minHeight);
+		
+	}
+	
+	
+	
+	
+	// Event Handlers
+	
+	
+	
+	
+	private static function items_onResize (event:Event):Void {
+		
+		eventDispatcher.dispatchEvent (new Event (Event.RESIZE)); 
 		
 	}
 	
@@ -292,84 +158,135 @@ class LayoutManager extends EventDispatcher {
 	
 	
 	
-	private function get_clampHeight ():Bool {
+	private static function get_clampHeight ():Bool {
+		
+		initialize ();
 		
 		return items.clampHeight;
 		
 	}
 	
 	
-	private function set_clampHeight (value:Bool):Bool {
+	private static function set_clampHeight (value:Bool):Bool {
+		
+		initialize ();
 		
 		return items.clampHeight = value;
 		
 	}
 	
 	
-	private function get_clampWidth ():Bool {
+	private static function get_clampWidth ():Bool {
+		
+		initialize ();
 		
 		return items.clampWidth;
 		
 	}
 	
 	
-	private function set_clampWidth (value:Bool):Bool {
+	private static function set_clampWidth (value:Bool):Bool {
+		
+		initialize ();
 		
 		return items.clampWidth = value;
 		
 	}
 	
 	
-	private function get_height ():Float {
+	private static function get_height ():Float {
+		
+		initialize ();
 		
 		return items.height;
 		
 	}
 	
 	
-	private function get_initHeight ():Float {
+	private static function get_initHeight ():Float {
+		
+		initialize ();
 		
 		return items.initHeight;
 		
 	}
 	
 	
-	private function get_initWidth ():Float {
+	private static function get_initScale ():Float {
+		
+		initialize ();
+		
+		return items.initScale;
+		
+	}
+	
+	
+	private static function get_initWidth ():Float {
+		
+		initialize ();
 		
 		return items.initWidth;
 		
 	}
 	
 	
-	private function get_minHeight ():Float {
+	private static function get_minHeight ():Float {
+		
+		initialize ();
 		
 		return items.minHeight;
 		
 	}
 	
 	
-	private function set_minHeight (value:Float):Float {
+	private static function set_minHeight (value:Float):Float {
+		
+		initialize ();
 		
 		return items.minHeight = value;
 		
 	}
 	
 	
-	private function get_minWidth ():Float {
+	private static function get_minWidth ():Float {
+		
+		initialize ();
 		
 		return items.minWidth;
 		
 	}
 	
 	
-	private function set_minWidth (value:Float):Float {
+	private static function set_minWidth (value:Float):Float {
+		
+		initialize ();
 		
 		return items.minWidth = value;
 		
 	}
 	
 	
-	private function get_width ():Float {
+	private static function get_pixelScale ():Float {
+		
+		initialize ();
+		
+		return items.pixelScale;
+		
+	}
+	
+	
+	private static function set_pixelScale (value:Float):Float {
+		
+		initialize ();
+		
+		return items.pixelScale = value;
+		
+	}
+	
+	
+	private static function get_width ():Float {
+		
+		initialize ();
 		
 		return items.width;
 		
