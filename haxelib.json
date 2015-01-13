@@ -2,10 +2,10 @@
   "name": "layout",
   "url": "http://github.com/jgranick/layout",
   "license": "MIT",
-  "tags": ["cpp", "flash"],
+  "tags": ["cpp", "flash", "neko", "js"],
   "description": "Flexible system for fluid resizing layouts",
-  "version": "1.0.4",
-  "releasenote": "Fix for HTML5",
+  "version": "1.1.0",
+  "releasenote": "Promote LayoutGroup to instance-based layout support, add LayoutManager as a single global layout approach",
   "contributors": [ "singmajesty" ],
   "dependencies": {}
 }
