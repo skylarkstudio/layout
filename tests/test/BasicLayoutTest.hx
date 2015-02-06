@@ -9,20 +9,20 @@ import massive.munit.Assert;
 class BasicLayoutTest {
 	
 	
-	public var background:DisplayObject;
-	public var logo:DisplayObject;
-	public var sidebar:DisplayObject;
-	public var footer:DisplayObject;
+	public static var background:DisplayObject;
+	public static var logo:DisplayObject;
+	public static var sidebar:DisplayObject;
+	public static var footer:DisplayObject;
 	
-	private var logoX = 10;
-	private var logoY = 10;
-	private var logoWidth = 40;
-	private var logoHeight = 25;
-	private var sidebarOffsetX = 60;
-	private var sidebarWidth = 60;
-	private var sidebarOffsetHeight = 40;
-	private var footerOffsetY = 40;
-	private var footerHeight = 40;
+	private static var logoX = 10;
+	private static var logoY = 10;
+	private static var logoWidth = 40;
+	private static var logoHeight = 25;
+	private static var sidebarOffsetX = 60;
+	private static var sidebarWidth = 60;
+	private static var sidebarOffsetHeight = 40;
+	private static var footerOffsetY = 40;
+	private static var footerHeight = 40;
 	
 	
 	@Before public function setup ():Void {
@@ -64,39 +64,38 @@ class BasicLayoutTest {
 		layoutGroup.addItem (new LayoutItem (logo, LEFT, TOP));
 		layoutGroup.addItem (new LayoutItem (sidebar, RIGHT, STRETCH));
 		layoutGroup.addItem (new LayoutItem (footer, STRETCH, BOTTOM));
-		
-		trace ("1");
-		
 		checkObjects (200, 200);
 		
 		layoutGroup.resize (200, 200);
-		
-		trace ("2");
-		
 		checkObjects (200, 200);
 		
 		layoutGroup.resize (300, 240);
-		
-		trace ("3");
-		
 		checkObjects (300, 240);
 		
 		layoutGroup.resize (1200, 1370);
-		
-		trace ("4");
-		
 		checkObjects (1200, 1370);
 		
 		layoutGroup.resize (1500, 1200);
-		
-		trace ("5");
-		
 		checkObjects (1500, 1200);
+		
+		layoutGroup.resize (220, 100);
+		checkObjects (220, 100);
+		
+		layoutGroup.resize (100, 220);
+		checkObjects (100, 220);
+		
+		layoutGroup.resize (10, 10);
+		checkObjects (10, 10);
 		
 	}
 	
 	
 	private function checkObjects (width:Float, height:Float):Void {
+		
+		// sizes default to rigid, so no smaller dimensions on this layout
+		
+		if (width < 200) width = 200;
+		if (height < 200) height = 200;
 		
 		Assert.areEqual (0, background.x);
 		Assert.areEqual (0, background.y);
