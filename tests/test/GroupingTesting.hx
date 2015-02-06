@@ -1,12 +1,12 @@
 package;
 
 
-import layout.Layout;
+import layout.LayoutGroup;
 import layout.LayoutItem;
 import massive.munit.Assert;
 
 
-class BasicLayoutTest {
+class GroupingTest {
 	
 	
 	public static var background:DisplayObject;
@@ -57,79 +57,46 @@ class BasicLayoutTest {
 	}
 	
 	
-	@Test public function testInitSize ():Void {
+	@Test public function testLayoutGroup ():Void {
 		
-		// Set an exact layout size
+		var childGroup = new LayoutGroup (200, 200, 1, CENTER, CENTER);
+		childGroup.addItem (new LayoutItem (background, STRETCH, STRETCH));
+		childGroup.addItem (new LayoutItem (logo, LEFT, TOP));
+		childGroup.addItem (new LayoutItem (sidebar, RIGHT, STRETCH));
+		childGroup.addItem (new LayoutItem (footer, STRETCH, BOTTOM));
 		
-		var layout = new Layout (200, 200);
-		layout.addItem (new LayoutItem (background, STRETCH, STRETCH));
-		layout.addItem (new LayoutItem (logo, LEFT, TOP));
-		layout.addItem (new LayoutItem (sidebar, RIGHT, STRETCH));
-		layout.addItem (new LayoutItem (footer, STRETCH, BOTTOM));
+		var layoutGroup = new LayoutGroup ();
+		layoutGroup.addItem (childGroup);
+		
 		checkObjects (200, 200);
 		
-		layout.resize (200, 200);
+		layoutGroup.resize (200, 200);
 		checkObjects (200, 200);
 		
-		layout.resize (300, 240);
+		layoutGroup.resize (300, 240);
 		checkObjects (300, 240);
 		
-		layout.resize (1200, 1370);
+		layoutGroup.resize (1200, 1370);
 		checkObjects (1200, 1370);
 		
-		layout.resize (1500, 1200);
+		layoutGroup.resize (1500, 1200);
 		checkObjects (1500, 1200);
 		
-		layout.resize (220, 100);
+		layoutGroup.resize (220, 100);
 		checkObjects (220, 100);
 		
-		layout.resize (100, 220);
+		layoutGroup.resize (100, 220);
 		checkObjects (100, 220);
 		
-		layout.resize (10, 10);
+		layoutGroup.resize (10, 10);
 		checkObjects (10, 10);
 		
 	}
 	
 	
-	@Test public function testNoInitSize ():Void {
+	private function checkObjects (width:Float, height:Float):Void {
 		
-		// Get the init layout size automatically (based on the size of the objects added before resizing)
-		
-		var layout = new Layout ();
-		layout.addItem (new LayoutItem (background, STRETCH, STRETCH));
-		layout.addItem (new LayoutItem (logo, LEFT, TOP));
-		layout.addItem (new LayoutItem (sidebar, RIGHT, STRETCH));
-		layout.addItem (new LayoutItem (footer, STRETCH, BOTTOM));
-		checkObjects (200, 200);
-		
-		layout.resize (200, 200);
-		checkObjects (200, 200);
-		
-		layout.resize (300, 240);
-		checkObjects (300, 240);
-		
-		layout.resize (1200, 1370);
-		checkObjects (1200, 1370);
-		
-		layout.resize (1500, 1200);
-		checkObjects (1500, 1200);
-		
-		layout.resize (220, 100);
-		checkObjects (220, 100);
-		
-		layout.resize (100, 220);
-		checkObjects (100, 220);
-		
-		layout.resize (10, 10);
-		checkObjects (10, 10);
-		
-	}
-	
-	
-	private inline function checkObjects (width:Float, height:Float):Void {
-		
-		// Items are rigid horizontal/vertical by default, so the layout should not allow smaller sizes than 200 x 200 (background size)
+		// sizes default to rigid, so no smaller dimensions on this layout
 		
 		if (width < 200) width = 200;
 		if (height < 200) height = 200;

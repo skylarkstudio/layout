@@ -1,9 +1,6 @@
 ﻿package layout;
-	
-	
-/**
- * @author Joshua Granick
- */
+
+
 enum LayoutType {
 	
 	BOTTOM;

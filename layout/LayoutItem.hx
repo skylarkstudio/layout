@@ -1,15 +1,7 @@
 ﻿package layout;
 
 
-#if (flash || openfl || nme)
-import flash.events.EventDispatcher;
-#end
-
-
-/**
- * @author Joshua Granick
- */
-class LayoutItem #if (flash || openfl || nme) extends EventDispatcher #end {
+class LayoutItem {
 	
 	
 	public var horizontalLayout:LayoutType;
@@ -33,10 +25,6 @@ class LayoutItem #if (flash || openfl || nme) extends EventDispatcher #end {
 	
 	
 	public function new (object:Dynamic, horizontalLayout:LayoutType = null, verticalLayout:LayoutType = null, rigidHorizontal:Bool = true, rigidVertical:Bool = true) {
-		
-		#if (flash || openfl || nme)
-		super ();
-		#end
 		
 		if (horizontalLayout == null) {
 			

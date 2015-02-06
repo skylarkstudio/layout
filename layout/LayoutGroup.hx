@@ -1,14 +1,6 @@
 ﻿package layout;
 
 
-#if (flash || openfl || nme)
-import flash.events.Event;
-#end
-
-
-/**
- * @author Joshua Granick
- */
 class LayoutGroup extends LayoutItem {
 	
 	
@@ -34,11 +26,7 @@ class LayoutGroup extends LayoutItem {
 	private var _y:Float;
 	
 	
-	public function new (initWidth:Float = 0, initHeight:Float = 0, initScale:Float = 1, horizontalLayout:LayoutType = null, verticalLayout:LayoutType = null, rigidHorizontal:Bool = true, rigidVertical:Bool = true) {
-		
-		this.initWidth = initWidth;
-		this.initHeight = initHeight;
-		this.initScale = initScale;
+	public function new (horizontalLayout:LayoutType = null, verticalLayout:LayoutType = null, rigidHorizontal:Bool = true, rigidVertical:Bool = true) {
 		
 		if (horizontalLayout == null) {
 			
@@ -57,7 +45,7 @@ class LayoutGroup extends LayoutItem {
 		_x = 0;
 		_y = 0;
 		
-		resize (this.initWidth, this.initHeight);
+		resize (0, 0);
 		
 	}
 	
@@ -181,7 +169,7 @@ class LayoutGroup extends LayoutItem {
 	}
 	
 	
-	public function layoutItems ():Void {
+	private function layoutItemGroup ():Void {
 		
 		var minWidth = ifDefined (minWidth, 0);
 		var minHeight = ifDefined (minHeight, 0);
@@ -335,28 +323,17 @@ class LayoutGroup extends LayoutItem {
 	
 	public function resize (width:Float, height:Float):Void {
 		
-		var cacheWidth = this.width;
-		var cacheHeight = this.height;
-		
 		_width = width;
 		_height = height;
 		
 		if (items.length > 0) {
 			
-			layoutItems ();
+			layoutItemGroup ();
 			
 		} else {
 			
 			initWidth = width;
 			initHeight = height;
-			
-		}
-		
-		if (this.width != cacheWidth || this.height != cacheHeight) {
-			
-			#if (flash || openfl || nme)
-			dispatchEvent (new Event (Event.RESIZE));
-			#end
 			
 		}
 		
@@ -369,7 +346,7 @@ class LayoutGroup extends LayoutItem {
 		
 		if (items.length > 0) {
 			
-			layoutItems ();
+			layoutItemGroup ();
 			
 		} else {
 			
@@ -454,7 +431,7 @@ class LayoutGroup extends LayoutItem {
 		
 		_x = value;
 		
-		layoutItems ();
+		layoutItemGroup ();
 		
 		return _x;
 		
@@ -472,7 +449,7 @@ class LayoutGroup extends LayoutItem {
 		
 		_y = value;
 		
-		layoutItems ();
+		layoutItemGroup ();
 		
 		return _y;
 		
