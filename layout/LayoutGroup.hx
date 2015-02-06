@@ -26,13 +26,7 @@ class LayoutGroup extends LayoutItem {
 	private var _y:Float;
 	
 	
-	public function new (horizontalLayout:LayoutType = null, verticalLayout:LayoutType = null, rigidHorizontal:Bool = true, rigidVertical:Bool = true) {
-		
-		if (horizontalLayout == null) {
-			
-			horizontalLayout = LayoutType.NONE;
-			
-		}
+	public function new (verticalLayout:LayoutType = null, horizontalLayout:LayoutType = null, rigidVertical:Bool = true, rigidHorizontal:Bool = true) {
 		
 		if (verticalLayout == null) {
 			
@@ -40,77 +34,53 @@ class LayoutGroup extends LayoutItem {
 			
 		}
 		
-		super (this, horizontalLayout, verticalLayout, rigidHorizontal, rigidVertical);
+		if (horizontalLayout == null) {
+			
+			horizontalLayout = LayoutType.NONE;
+			
+		}
+		
+		super (this, verticalLayout, horizontalLayout, rigidVertical, rigidHorizontal);
 		
 		_x = 0;
 		_y = 0;
+		_width = 0;
+		_height = 0;
+		_pixelScale = 0;
 		
 		resize (0, 0);
 		
 	}
 	
 	
-	public function addItem (item:LayoutItem, autoConfigureHorizontal:Bool = true, autoConfigureVertical:Bool = true, updateSize:Bool = true):Void {
+	public function addItem (item:LayoutItem, autoConfigureVertical:Bool = true, autoConfigureHorizontal:Bool = true, updateSize:Bool = true):Void {
 		
-		configureItem (item, autoConfigureHorizontal, autoConfigureVertical);
+		if (initWidth != 0 && initHeight != 0) {
+			
+			configureItem (item, autoConfigureVertical, autoConfigureHorizontal);
+			
+		}
 		
 		items.push (item);
-		itemConfigureHorizontal.push (autoConfigureHorizontal);
 		itemConfigureVertical.push (autoConfigureVertical);
+		itemConfigureHorizontal.push (autoConfigureHorizontal);
 		
 		if (updateSize) {
 			
 			refreshSize ();
+			
+			if (initWidth != 0 && initHeight != 0) {
+				
+				configureItems ();
+				
+			}
 			
 		}
 		
 	}
 	
 	
-	private function configureItem (item:LayoutItem, autoConfigureHorizontal:Bool, autoConfigureVertical:Bool):Void {
-		
-		if (autoConfigureHorizontal) {
-			
-			switch (item.horizontalLayout) {
-				
-				case LayoutType.CENTER:
-					
-					var horizontalOffset = item.objectX - (initWidth / 2 - item.objectWidth / 2) - _x;
-					
-					if (horizontalOffset > 0) {
-						
-						item.marginLeft = horizontalOffset;
-						
-					} else {
-						
-						item.marginRight = Math.abs (horizontalOffset);
-						
-					}
-				
-				case LayoutType.LEFT:
-					
-					item.marginLeft = item.objectX - _x;
-				
-				case LayoutType.RIGHT:
-					
-					item.marginRight = initWidth - item.objectX - item.objectWidth - _x;
-				
-				case LayoutType.STRETCH:
-					
-					item.marginLeft = item.objectX - _x;
-					item.marginRight = initWidth - item.objectX - item.objectWidth - _x;
-					
-					if (item.rigidHorizontal && item.minWidth == null) {
-						
-						item.minWidth = item.objectWidth;
-						
-					}
-				
-				default:
-				
-			}
-			
-		}
+	private function configureItem (item:LayoutItem, autoConfigureVertical:Bool, autoConfigureHorizontal:Bool):Void {
 		
 		if (autoConfigureVertical) {
 			
@@ -155,6 +125,60 @@ class LayoutGroup extends LayoutItem {
 			
 		}
 		
+		if (autoConfigureHorizontal) {
+			
+			switch (item.horizontalLayout) {
+				
+				case LayoutType.CENTER:
+					
+					var horizontalOffset = item.objectX - (initWidth / 2 - item.objectWidth / 2) - _x;
+					
+					if (horizontalOffset > 0) {
+						
+						item.marginLeft = horizontalOffset;
+						
+					} else {
+						
+						item.marginRight = Math.abs (horizontalOffset);
+						
+					}
+				
+				case LayoutType.LEFT:
+					
+					item.marginLeft = item.objectX - _x;
+				
+				case LayoutType.RIGHT:
+					
+					item.marginRight = initWidth - item.objectX - item.objectWidth - _x;
+				
+				case LayoutType.STRETCH:
+					
+					item.marginLeft = item.objectX - _x;
+					item.marginRight = initWidth - item.objectX - item.objectWidth - _x;
+					
+					if (item.rigidHorizontal && item.minWidth == null) {
+						
+						item.minWidth = item.objectWidth;
+						
+					}
+				
+				default:
+				
+			}
+			
+		}
+		
+	}
+	
+	
+	private function configureItems ():Void {
+		
+		for (i in 0...items.length) {
+			
+			configureItem (items[i], itemConfigureVertical[i], itemConfigureHorizontal[i]);
+			
+		}
+		
 	}
 	
 	
@@ -178,28 +202,6 @@ class LayoutGroup extends LayoutItem {
 			
 			item.layoutItem (this);
 			
-			if (item.rigidHorizontal) {
-				
-				var minObjectWidth = item.marginLeft + item.marginRight;
-				
-				if (item.minWidth != null) {
-					
-					minObjectWidth += item.minWidth;
-					
-				} else {
-					
-					minObjectWidth += item.objectWidth;
-					
-				}
-				
-				if (minWidth < minObjectWidth) {
-					
-					minWidth = minObjectWidth;
-					
-				}
-				
-			}
-			
 			if (item.rigidVertical) {
 				
 				var minObjectHeight = item.marginTop + item.marginBottom;
@@ -217,6 +219,28 @@ class LayoutGroup extends LayoutItem {
 				if (minHeight < minObjectHeight) {
 					
 					minHeight = minObjectHeight;
+					
+				}
+				
+			}
+			
+			if (item.rigidHorizontal) {
+				
+				var minObjectWidth = item.marginLeft + item.marginRight;
+				
+				if (item.minWidth != null) {
+					
+					minObjectWidth += item.minWidth;
+					
+				} else {
+					
+					minObjectWidth += item.objectWidth;
+					
+				}
+				
+				if (minWidth < minObjectWidth) {
+					
+					minWidth = minObjectWidth;
 					
 				}
 				
@@ -271,22 +295,6 @@ class LayoutGroup extends LayoutItem {
 			
 			for (item in items) {
 				
-				if (item.horizontalLayout != LayoutType.NONE) {
-					
-					if (item.objectX < beginningX) {
-						
-						beginningX = item.objectX;
-						
-					}
-					
-					if (item.objectX + item.objectWidth > endX) {
-						
-						endX = item.objectX + item.objectWidth;
-						
-					}
-					
-				}
-				
 				if (item.verticalLayout != LayoutType.NONE) {
 					
 					if (item.objectY < beginningY) {
@@ -303,16 +311,35 @@ class LayoutGroup extends LayoutItem {
 					
 				}
 				
+				if (item.horizontalLayout != LayoutType.NONE) {
+					
+					if (item.objectX < beginningX) {
+						
+						beginningX = item.objectX;
+						
+					}
+					
+					if (item.objectX + item.objectWidth > endX) {
+						
+						endX = item.objectX + item.objectWidth;
+						
+					}
+					
+				}
+				
 			}
 			
-			_x = beginningX;
-			_y = beginningY;
-			_width = initWidth = endX - beginningX;
-			_height = initHeight = endY - beginningY;
-			
-			for (i in 0...items.length) {
+			if (beginningX != Math.POSITIVE_INFINITY && endX != Math.NEGATIVE_INFINITY) {
 				
-				configureItem (items[i], itemConfigureHorizontal[i], itemConfigureVertical[i]);
+				_x = beginningX;
+				_width = initWidth = endX - beginningX;
+				
+			}
+			
+			if (beginningY != Math.POSITIVE_INFINITY && endY != Math.NEGATIVE_INFINITY) {
+				
+				_y = beginningY;
+				_height = initHeight = endY - beginningY;
 				
 			}
 			

@@ -42,9 +42,9 @@ class Layout #if (flash || openfl || nme) extends EventDispatcher #end {
 	}
 	
 	
-	public function addItem (item:LayoutItem, autoConfigureHorizontal:Bool = true, autoConfigureVertical:Bool = true):Void {
+	public function addItem (item:LayoutItem, autoConfigureVertical:Bool = true, autoConfigureHorizontal:Bool = true):Void {
 		
-		items.addItem (item, autoConfigureHorizontal, autoConfigureVertical, false);
+		items.addItem (item, autoConfigureVertical, autoConfigureHorizontal, false);
 		
 	}
 	
@@ -68,12 +68,17 @@ class Layout #if (flash || openfl || nme) extends EventDispatcher #end {
 		
 		if (_initWidth == 0 && _initHeight == 0) {
 			
-			items.refreshSize ();
+			if (items.width == 0 && items.height == 0) {
+				
+				items.refreshSize ();
+				
+			}
 			
 			_initWidth = items.width;
 			_initHeight = items.height;
 			
 			items.setInitSize (_initWidth, _initHeight);
+			items.configureItems ();
 			
 		}
 		

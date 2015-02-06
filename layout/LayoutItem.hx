@@ -24,13 +24,7 @@ class LayoutItem {
 	private var objectY (get, set):Float;
 	
 	
-	public function new (object:Dynamic, horizontalLayout:LayoutType = null, verticalLayout:LayoutType = null, rigidHorizontal:Bool = true, rigidVertical:Bool = true) {
-		
-		if (horizontalLayout == null) {
-			
-			horizontalLayout = LayoutType.LEFT;
-			
-		}
+	public function new (object:Dynamic, verticalLayout:LayoutType = null, horizontalLayout:LayoutType = null, rigidVertical:Bool = true, rigidHorizontal:Bool = true) {
 		
 		if (verticalLayout == null) {
 			
@@ -38,11 +32,17 @@ class LayoutItem {
 			
 		}
 		
+		if (horizontalLayout == null) {
+			
+			horizontalLayout = LayoutType.LEFT;
+			
+		}
+		
 		this.object = object;
-		this.horizontalLayout = horizontalLayout;
 		this.verticalLayout = verticalLayout;
-		this.rigidHorizontal = rigidHorizontal;
+		this.horizontalLayout = horizontalLayout;
 		this.rigidVertical = rigidVertical;
+		this.rigidHorizontal = rigidHorizontal;
 		
 		initialize ();
 		
@@ -106,46 +106,6 @@ class LayoutItem {
 	
 	private function layoutItem (layoutGroup:LayoutGroup):Void {
 		
-		switch (horizontalLayout) {
-			
-			case CENTER:
-				
-				objectX = layoutGroup.width / 2 - objectWidth / 2 + marginLeft - marginRight;
-			
-			case LEFT:
-				
-				objectX = marginLeft;
-			
-			case RIGHT:
-				
-				objectX = layoutGroup.width - objectWidth - marginRight;
-			
-			case STRETCH:
-				
-				objectX = marginLeft;
-				
-				var stretchWidth = layoutGroup.width - marginLeft - marginRight;
-				
-				if (stretchWidth < 0) {
-					
-					stretchWidth = 0;
-					
-				}
-				
-				if (rigidHorizontal && minWidth != null && stretchWidth < minWidth) {
-					
-					objectWidth = minWidth;
-					
-				} else {
-					
-					objectWidth = stretchWidth;
-					
-				}
-			
-			default:
-			
-		}
-		
 		switch (verticalLayout) {
 			
 			case BOTTOM:
@@ -181,6 +141,46 @@ class LayoutItem {
 			case TOP:
 				
 				objectY = marginTop;
+			
+			default:
+			
+		}
+		
+		switch (horizontalLayout) {
+			
+			case CENTER:
+				
+				objectX = layoutGroup.width / 2 - objectWidth / 2 + marginLeft - marginRight;
+			
+			case LEFT:
+				
+				objectX = marginLeft;
+			
+			case RIGHT:
+				
+				objectX = layoutGroup.width - objectWidth - marginRight;
+			
+			case STRETCH:
+				
+				objectX = marginLeft;
+				
+				var stretchWidth = layoutGroup.width - marginLeft - marginRight;
+				
+				if (stretchWidth < 0) {
+					
+					stretchWidth = 0;
+					
+				}
+				
+				if (rigidHorizontal && minWidth != null && stretchWidth < minWidth) {
+					
+					objectWidth = minWidth;
+					
+				} else {
+					
+					objectWidth = stretchWidth;
+					
+				}
 			
 			default:
 			
