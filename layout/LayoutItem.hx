@@ -1,14 +1,15 @@
 ﻿package layout;
 
 
-import flash.display.DisplayObject;
+#if (flash || openfl || nme)
 import flash.events.EventDispatcher;
+#end
 
 
 /**
  * @author Joshua Granick
  */
-class LayoutItem extends EventDispatcher {
+class LayoutItem #if (flash || openfl || nme) extends EventDispatcher #end {
 	
 	
 	public var horizontalLayout:LayoutType;
@@ -33,7 +34,9 @@ class LayoutItem extends EventDispatcher {
 	
 	public function new (object:Dynamic, horizontalLayout:LayoutType = null, verticalLayout:LayoutType = null, rigidHorizontal:Bool = true, rigidVertical:Bool = true) {
 		
+		#if (flash || openfl || nme)
 		super ();
+		#end
 		
 		if (horizontalLayout == null) {
 			
@@ -54,6 +57,37 @@ class LayoutItem extends EventDispatcher {
 		this.rigidVertical = rigidVertical;
 		
 		initialize ();
+		
+	}
+	
+	
+	private inline function getField (target:Dynamic, propertyName:String):Dynamic {
+		
+		#if (haxe_209 || haxe3)
+		
+		var value = null;
+		
+		if (Reflect.hasField (target, propertyName)) {
+			
+			#if flash
+			value = untyped target[propertyName];
+			#else
+			value = Reflect.field (target, propertyName);
+			#end
+			
+		} else {
+			
+			value = Reflect.getProperty (target, propertyName);
+			
+		}
+		
+		return value;
+		
+		#else
+		
+		return Reflect.field (target, propertyName);
+		
+		#end
 		
 	}
 	
@@ -170,6 +204,27 @@ class LayoutItem extends EventDispatcher {
 	}
 	
 	
+	private inline function setField (target:Dynamic, propertyName:String, value:Dynamic):Void {
+		
+		if (Reflect.hasField (target, propertyName)) {
+			
+			#if flash
+			untyped target[propertyName] = value;
+			#else
+			Reflect.setField (target, propertyName, value);
+			#end
+			
+		} else {
+			
+			#if (haxe_209 || haxe3)
+			Reflect.setProperty (target, propertyName, value);
+			#end
+			
+		}
+		
+	}
+	
+	
 	public function setMargins (marginTop:Float = 0, marginRight:Float = 0, marginBottom:Float = 0, marginLeft:Float = 0):Void {
 		
 		this.marginTop = marginTop;
@@ -197,288 +252,90 @@ class LayoutItem extends EventDispatcher {
 	
 	private #if (!neko && !js) inline #end function get_objectHeight ():Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "height")) {
-			
-			return Reflect.field (object, "height");
-			
-		} else {
-			
-			return Reflect.getProperty (object, "height");
-			
-		}
-		
-		#else
-		
-		return object.height;
-		
-		#end
+		return getField (object, "height");
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function set_objectHeight (value:Float):Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "height")) {
-			
-			Reflect.setField (object, "height", value);
-			
-		} else {
-			
-			Reflect.setProperty (object, "height", value);
-			
-		}
-		
+		setField (object, "height", value);
 		return value;
-		
-		#else
-		
-		return object.height = value;
-		
-		#end
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function get_objectScaleX ():Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "scaleX")) {
-			
-			return Reflect.field (object, "scaleX");
-			
-		} else {
-			
-			return Reflect.getProperty (object, "scaleX");
-			
-		}
-		
-		#else
-		
-		return object.scaleX;
-		
-		#end
+		return getField (object, "scaleX");
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function set_objectScaleX (value:Float):Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "scaleX")) {
-			
-			Reflect.setField (object, "scaleX", value);
-			
-		} else {
-			
-			Reflect.setProperty (object, "scaleX", value);
-			
-		}
-		
+		setField (object, "scaleX", value);
 		return value;
-		
-		#else
-		
-		return object.scaleX = value;
-		
-		#end
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function get_objectScaleY ():Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "scaleY")) {
-			
-			return Reflect.field (object, "scaleY");
-			
-		} else {
-			
-			return Reflect.getProperty (object, "scaleY");
-			
-		}
-		
-		#else
-		
-		return object.scaleY;
-		
-		#end
+		return getField (object, "scaleY");
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function set_objectScaleY (value:Float):Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "scaleY")) {
-			
-			Reflect.setField (object, "scaleY", value);
-			
-		} else {
-			
-			Reflect.setProperty (object, "scaleY", value);
-			
-		}
-		
+		setField (object, "scaleY", value);
 		return value;
-		
-		#else
-		
-		return object.scaleY = value;
-		
-		#end
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function get_objectWidth ():Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "width")) {
-			
-			return Reflect.field (object, "width");
-			
-		} else {
-			
-			return Reflect.getProperty (object, "width");
-			
-		}
-		
-		#else
-		
-		return object.width;
-		
-		#end
+		return getField (object, "width");
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function set_objectWidth (value:Float):Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "width")) {
-			
-			Reflect.setField (object, "width", value);
-			
-		} else {
-			
-			Reflect.setProperty (object, "width", value);
-			
-		}
-		
+		setField (object, "width", value);
 		return value;
-		
-		#else
-		
-		return object.width = value;
-		
-		#end
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function get_objectX ():Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "x")) {
-			
-			return Reflect.field (object, "x");
-			
-		} else {
-			
-			return Reflect.getProperty (object, "x");
-			
-		}
-		
-		#else
-		
-		return object.x;
-		
-		#end
+		return getField (object, "x");
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function set_objectX (value:Float):Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "x")) {
-			
-			Reflect.setField (object, "x", value);
-			
-		} else {
-			
-			Reflect.setProperty (object, "x", value);
-			
-		}
-		
+		setField (object, "x", value);
 		return value;
-		
-		#else
-		
-		return object.x = value;
-		
-		#end
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function get_objectY ():Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "y")) {
-			
-			return Reflect.field (object, "y");
-			
-		} else {
-			
-			return Reflect.getProperty (object, "y");
-			
-		}
-		
-		#else
-		
-		return object.y;
-		
-		#end
+		return getField (object, "y");
 		
 	}
 	
 	
 	private #if (!neko && !js) inline #end function set_objectY (value:Float):Float {
 		
-		#if (neko || js)
-		
-		if (Reflect.hasField (object, "y")) {
-			
-			Reflect.setField (object, "y", value);
-			
-		} else {
-			
-			Reflect.setProperty (object, "y", value);
-			
-		}
-		
+		setField (object, "y", value);
 		return value;
-		
-		#else
-		
-		return object.y = value;
-		
-		#end
 		
 	}
 	

@@ -1,8 +1,9 @@
 ﻿package layout;
 
 
+#if (flash || openfl || nme)
 import flash.events.Event;
-import flash.geom.Point;
+#end
 
 
 /**
@@ -275,22 +276,24 @@ class LayoutGroup extends LayoutItem {
 		
 		if (items.length > 0) {
 			
-			var beginning = new Point (Math.POSITIVE_INFINITY, Math.POSITIVE_INFINITY);
-			var end = new Point (Math.NEGATIVE_INFINITY, Math.NEGATIVE_INFINITY);
+			var beginningX = Math.POSITIVE_INFINITY;
+			var beginningY = Math.POSITIVE_INFINITY;
+			var endX = Math.NEGATIVE_INFINITY;
+			var endY = Math.NEGATIVE_INFINITY;
 			
 			for (item in items) {
 				
 				if (item.horizontalLayout != LayoutType.NONE) {
 					
-					if (item.objectX < beginning.x) {
+					if (item.objectX < beginningX) {
 						
-						beginning.x = item.objectX;
+						beginningX = item.objectX;
 						
 					}
 					
-					if (item.objectX + item.objectWidth > end.x) {
+					if (item.objectX + item.objectWidth > endX) {
 						
-						end.x = item.objectX + item.objectWidth;
+						endX = item.objectX + item.objectWidth;
 						
 					}
 					
@@ -298,15 +301,15 @@ class LayoutGroup extends LayoutItem {
 				
 				if (item.verticalLayout != LayoutType.NONE) {
 					
-					if (item.objectY < beginning.y) {
+					if (item.objectY < beginningY) {
 						
-						beginning.y = item.objectY;
+						beginningY = item.objectY;
 						
 					}
 					
-					if (item.objectY + item.objectHeight > end.y) {
+					if (item.objectY + item.objectHeight > endY) {
 						
-						end.y = item.objectY + item.objectHeight;
+						endY = item.objectY + item.objectHeight;
 						
 					}
 					
@@ -314,10 +317,10 @@ class LayoutGroup extends LayoutItem {
 				
 			}
 			
-			_x = beginning.x;
-			_y = beginning.y;
-			_width = initWidth = end.x - beginning.x;
-			_height = initHeight = end.y - beginning.y;
+			_x = beginningX;
+			_y = beginningY;
+			_width = initWidth = endX - beginningX;
+			_height = initHeight = endY - beginningY;
 			
 			for (i in 0...items.length) {
 				
@@ -351,7 +354,9 @@ class LayoutGroup extends LayoutItem {
 		
 		if (this.width != cacheWidth || this.height != cacheHeight) {
 			
+			#if (flash || openfl || nme)
 			dispatchEvent (new Event (Event.RESIZE));
+			#end
 			
 		}
 		

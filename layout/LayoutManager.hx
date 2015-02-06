@@ -1,9 +1,10 @@
 ﻿package layout;
 
 
-import flash.display.DisplayObject;
+#if (flash || openfl || nme)
 import flash.events.Event;
 import flash.events.EventDispatcher;
+#end
 
 @:access(layout.LayoutItem)
 
@@ -25,7 +26,9 @@ class LayoutManager {
 	public static var pixelScale (get, set):Float;
 	public static var width (get, null):Float;
 	
+	#if (flash || openfl || nme)
 	private static var eventDispatcher:EventDispatcher;
+	#end
 	private static var initialized = false;
 	private static var items:LayoutGroup;
 	
@@ -37,7 +40,9 @@ class LayoutManager {
 		
 		initialize ();
 		
+		#if (flash || openfl || nme)
 		eventDispatcher.addEventListener (type, listener, useCapture, priority, useWeakReference);
+		#end
 		
 	}
 	
@@ -55,7 +60,11 @@ class LayoutManager {
 		
 		initialize ();
 		
+		#if (flash || openfl || nme)
 		return eventDispatcher.dispatchEvent (event);
+		#else
+		return true;
+		#end
 		
 	}
 	
@@ -64,7 +73,11 @@ class LayoutManager {
 		
 		initialize ();
 		
+		#if (flash || openfl || nme)
 		return eventDispatcher.hasEventListener (type);
+		#else
+		return false;
+		#end
 		
 	}
 	
@@ -75,10 +88,15 @@ class LayoutManager {
 			
 			initialized = true;
 			
+			#if (flash || openfl || nme)
 			eventDispatcher = new EventDispatcher ();
+			#end
 			
 			items = new LayoutGroup (0, 0, 1, NONE, NONE, false, false);
+			
+			#if (flash || openfl || nme)
 			items.addEventListener (Event.RESIZE, items_onResize);
+			#end
 			
 		}
 		
@@ -98,7 +116,9 @@ class LayoutManager {
 		
 		initialize ();
 		
+		#if (flash || openfl || nme)
 		eventDispatcher.removeEventListener (type, listener, capture);
+		#end
 		
 	}
 	
@@ -146,7 +166,9 @@ class LayoutManager {
 	
 	private static function items_onResize (event:Event):Void {
 		
-		eventDispatcher.dispatchEvent (new Event (Event.RESIZE)); 
+		#if (flash || openfl || nme)
+		eventDispatcher.dispatchEvent (new Event (Event.RESIZE));
+		#end
 		
 	}
 	
