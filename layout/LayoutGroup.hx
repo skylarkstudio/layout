@@ -82,6 +82,8 @@ class LayoutGroup extends LayoutItem {
 	
 	private function configureItem (item:LayoutItem, autoConfigureVertical:Bool, autoConfigureHorizontal:Bool):Void {
 		
+		item.configureItems ();
+		
 		if (autoConfigureVertical) {
 			
 			switch (item.verticalLayout) {
@@ -171,7 +173,7 @@ class LayoutGroup extends LayoutItem {
 	}
 	
 	
-	private function configureItems ():Void {
+	private override function configureItems ():Void {
 		
 		for (i in 0...items.length) {
 			
@@ -284,7 +286,7 @@ class LayoutGroup extends LayoutItem {
 	}
 	
 	
-	private function refreshSize ():Void {
+	private override function refreshSize ():Void {
 		
 		if (items.length > 0) {
 			
@@ -294,6 +296,8 @@ class LayoutGroup extends LayoutItem {
 			var endY = Math.NEGATIVE_INFINITY;
 			
 			for (item in items) {
+				
+				item.refreshSize ();
 				
 				if (item.verticalLayout != LayoutType.NONE) {
 					

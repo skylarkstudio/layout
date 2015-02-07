@@ -438,7 +438,7 @@ class BasicLayoutTest {
 }
 
 
-class DisplayObject {
+private class DisplayObject {
 	
 	
 	public var x:Float;

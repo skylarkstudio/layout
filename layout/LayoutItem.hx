@@ -49,6 +49,13 @@ class LayoutItem {
 	}
 	
 	
+	private function configureItems ():Void {
+		
+		
+		
+	}
+	
+	
 	private inline function getField (target:Dynamic, propertyName:String):Dynamic {
 		
 		#if (haxe_209 || haxe3)
@@ -188,6 +195,13 @@ class LayoutItem {
 		
 		objectX += layoutGroup.x;
 		objectY += layoutGroup.y;
+		
+	}
+	
+	
+	private function refreshSize ():Void {
+		
+		
 		
 	}
 	
