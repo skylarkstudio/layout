@@ -1,11 +1,11 @@
 {
   "name": "layout",
-  "url": "http://github.com/jgranick/layout",
+  "url": "http://github.com/openfl/layout",
   "license": "MIT",
   "tags": ["cpp", "flash", "neko", "js"],
   "description": "Flexible system for fluid resizing layouts",
-  "version": "1.1.0",
-  "releasenote": "Promote LayoutGroup to instance-based layout support, add LayoutManager as a single global layout approach",
+  "version": "1.2.0",
+  "releasenote": "Clearly separate Layout and LayoutGroup, fixes and improvements",
   "contributors": [ "singmajesty" ],
   "dependencies": {}
 }
