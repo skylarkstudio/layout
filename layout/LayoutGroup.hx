@@ -18,6 +18,7 @@ class LayoutGroup extends LayoutItem {
 	
 	private var itemConfigureHorizontal:Array <Bool>;
 	private var itemConfigureVertical:Array <Bool>;
+	private var loop:Bool;
 	
 	private var _height:Float;
 	private var _pixelScale:Float;
@@ -200,13 +201,15 @@ class LayoutGroup extends LayoutItem {
 		var minWidth = ifDefined (minWidth, 0);
 		var minHeight = ifDefined (minHeight, 0);
 		
+		var minObjectHeight, minObjectWidth;
+		
 		for (item in items) {
 			
 			item.layoutItem (this);
 			
 			if (item.rigidVertical) {
 				
-				var minObjectHeight = item.marginTop + item.marginBottom;
+				minObjectHeight = item.marginTop + item.marginBottom;
 				
 				if (item.minHeight != null) {
 					
@@ -228,7 +231,7 @@ class LayoutGroup extends LayoutItem {
 			
 			if (item.rigidHorizontal) {
 				
-				var minObjectWidth = item.marginLeft + item.marginRight;
+				minObjectWidth = item.marginLeft + item.marginRight;
 				
 				if (item.minWidth != null) {
 					
@@ -279,7 +282,13 @@ class LayoutGroup extends LayoutItem {
 		
 		if (newWidth != width || newHeight != height) {
 			
-			resize (newWidth, newHeight);
+			if (!loop) {
+				
+				loop = true;
+				resize (newWidth, newHeight);
+				loop = false;
+				
+			}
 			
 		}
 		
