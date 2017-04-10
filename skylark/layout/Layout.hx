@@ -6,7 +6,7 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 #end
 
-@:access(layout.LayoutGroup)
+@:access(skylark.layout.LayoutGroup)
 
 
 class Layout #if (flash || openfl || nme) extends EventDispatcher #end {

@@ -1,13 +1,13 @@
 package;
 
 
-import layout.Layout;
-import layout.LayoutGroup;
-import layout.LayoutItem;
-import layout.LayoutType;
+import skylark.layout.Layout;
+import skylark.layout.LayoutGroup;
+import skylark.layout.LayoutItem;
+import skylark.layout.LayoutType;
 import massive.munit.Assert;
 
-@:access(layout)
+@:access(skylark.layout)
 
 
 class GroupTest {
